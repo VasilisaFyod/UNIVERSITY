@@ -10,7 +10,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UNIVERSITY.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UNIVERSITY
 {
@@ -60,38 +59,46 @@ namespace UNIVERSITY
             DateTime currentYear = DateTime.Now;
 
             var equipments = _context.Equipments
-                .Include(x => x.Auditorium)
+                .Include(e => e.Office)
+                .Include(e => e.Auditorium)
                 .ThenInclude(a => a.Office)
                 .AsEnumerable();
 
             if (_user == null)
             {
                 CanSeeStatus = false;
-                equipments = equipments.Where(x => x.Auditorium != null && x.Auditorium.Name.Trim().ToLower() != "засекречено");
+                equipments = equipments.Where(x =>
+                    (x.Auditorium != null &&
+                     x.Auditorium.Office == null)
+                    ||
+                    (x.Office != null &&
+                     x.Office.NameOffice.ToLower().Trim() == "столовая"));
             }
 
-            else if (_user.PositionId == 3 || _user.PositionId == 2 || _user.PositionId == 4) 
+            else if (_user.Position.PositionName.ToLower().Trim() == "лаборант" || _user.Position.PositionName.ToLower().Trim() == "техник" || _user.Position.PositionName.ToLower().Trim() == "инженер") 
             {
                 CanSeeStatus = false;
-                if (_user.PositionId == 3 || _user.PositionId == 2)
+                if (_user.Position.PositionName.ToLower().Trim() == "лаборант" || _user.Position.PositionName.ToLower().Trim() == "техник")
                 {
                     equipments = equipments.Where(x =>
-                        x.Auditorium != null &&
-                        x.Auditorium.OfficeId == _user.OfficeId);
+                        (x.Auditorium != null &&
+                        x.Auditorium.OfficeId == _user.OfficeId)
+                        ||
+                        (x.OfficeId == _user.OfficeId)); 
                 }
             }
-            else if (_user.PositionId == 1 || _user.PositionId == 6 || _user.PositionId == 7)
+            else if (_user.Position.PositionName.ToLower().Trim() == "заведующий лабораторией" || _user.Position.PositionName.ToLower().Trim() == "администратор бд" || _user.Position.PositionName.ToLower().Trim() == "заведующий складом")
             {
                 CanSeeStatus = true;
-                if (_user.PositionId == 1 || _user.PositionId == 7)
+                if (_user.Position.PositionName.ToLower().Trim() == "заведующий лабораторией" || _user.Position.PositionName.ToLower().Trim() == "заведующий складом")
                 {
                     equipments = equipments.Where(x =>
-                        x.Auditorium != null &&
-                        x.Auditorium.OfficeId == _user.OfficeId);
+                        (x.Auditorium != null &&
+                        x.Auditorium.OfficeId == _user.OfficeId)
+                        ||
+                        (x.OfficeId == _user.OfficeId)); 
                 }
             }
-
-
 
             List.ItemsSource = equipments.Select(x =>
             {
@@ -110,7 +117,7 @@ namespace UNIVERSITY
                     statusBrush = new SolidColorBrush(
                         (Color)ColorConverter.ConvertFromString("#E32636"));
                 }
-                else if (endDate == currentYear)
+                else if (endDate >= currentYear && endDate.Year == currentYear.Year)
                 {
                     statusText = "Срок службы истекает в этом году";
                     statusBrush = new SolidColorBrush(

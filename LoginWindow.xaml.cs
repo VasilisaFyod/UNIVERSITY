@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Microsoft.EntityFrameworkCore;
 using UNIVERSITY.Models;
 
 namespace UNIVERSITY
@@ -29,7 +23,10 @@ namespace UNIVERSITY
             string login = LoginTextBox.Text.Trim();
             string password = PasswordTextBox.Password.Trim();
 
-            var users = _context.Workers.FirstOrDefault(u => u.Login == login && u.Password == password);
+            var users = _context.Workers
+                .Include(w => w.Position)
+                .Include(w => w.Office)
+                .FirstOrDefault(u => u.Login == login && u.Password == password);
 
             if (users != null)
             {
