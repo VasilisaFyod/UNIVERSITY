@@ -1,4 +1,4 @@
-﻿<Window x:Class="UNIVERSITY.EquipmentList"
+﻿<Window x:Class="UNIVERSITY.EquipmentListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,32 +8,50 @@
         Title="Окно просмотра оборудования" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <Border BorderThickness="3" BorderBrush="#FFA500">
-            <Grid Grid.Row="0" Margin="30,0" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Margin="30,0" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0"
-                Width="100"
-                Click="ExitButton">
-                    Выход
-                </Button>
+            <Button Grid.Column="0"
+            Width="100"
+            Click="ExitButton" Background="Red">
+                Выход
+            </Button>
 
-                <TextBlock Grid.Column="1"
-                   x:Name="UserNameTextBlock"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"/>
-            </Grid>
+            <TextBlock Grid.Column="1"
+                x:Name="UserNameTextBlock"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"/>
+        </Grid>
+        <Border Height="50" Visibility="{Binding IsSortFilterVisible, Converter={StaticResource BoolToVis}}"  Grid.Row="1" BorderThickness="3" BorderBrush="#FFA500">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Margin="5,0">Сортировка по весу:</TextBlock>
+                <ComboBox Width="150"
+                  ItemsSource="{Binding WeightSortOptions}"
+                  SelectedItem="{Binding SelectedWeightSort, Mode=TwoWay}"
+                  SelectionChanged="WeightSort_SelectionChanged"/>
+                <TextBlock Margin="5,0">Фильтры:</TextBlock>
+                <ComboBox Width="200"
+                      ItemsSource="{Binding Offices}"
+                      DisplayMemberPath="NameOffice"
+                      SelectedValuePath="OfficeId"
+                      SelectedValue="{Binding SelectedOfficeId, Mode=TwoWay}"
+                      SelectionChanged="OfficeFilter_SelectionChanged"/>
+                <TextBlock Margin="5,0">Поиск:</TextBlock>
+                <TextBox x:Name="SearchEquipment" TextChanged="SearchEquipment_TextChanged" Width="200"/>
+            </StackPanel>
         </Border>
-        <Grid Grid.Row="1" HorizontalAlignment="Center">
-            <ListView  x:Name="List">
+        <Grid Grid.Row="2" HorizontalAlignment="Center">    
+            <ListView  x:Name="ListEquipments" SelectionChanged="ViewEditEquipment">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate >
                         <Border Padding="10" Width="550" BorderThickness="1" BorderBrush="Black">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -56,6 +74,9 @@
                 </ListView.ItemTemplate>
            </ListView>
         </Grid>
+        <StackPanel HorizontalAlignment="Center" Grid.Row="3" Orientation="Horizontal">
+            <Button Visibility="{Binding DataContext.CanSeeStatus, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVis}}" Width="100" Margin="0,15" Click="AddButton">Добавить</Button>
+        </StackPanel>
 
     </Grid>
 </Window>

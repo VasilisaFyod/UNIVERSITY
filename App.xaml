@@ -15,5 +15,8 @@
         <Style TargetType="TextBox">
             <Setter Property="FontFamily" Value="Times New Roman"/>
         </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="FontFamily" Value="Times New Roman"/>
+        </Style>
     </Application.Resources>
 </Application>
