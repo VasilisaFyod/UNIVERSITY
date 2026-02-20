@@ -30,7 +30,8 @@ namespace UNIVERSITY
 
             if (users != null)
             {
-                EquipmentList main = new EquipmentList(users);
+                App.Login(users);
+                EquipmentListWindow main = new EquipmentListWindow();
                 main.Show();
                 this.Close();
             }
@@ -41,7 +42,8 @@ namespace UNIVERSITY
 
         private void GuestButton(object sender, RoutedEventArgs e)
         {
-            EquipmentList main = new EquipmentList();
+            App.Login(null);
+            EquipmentListWindow main = new EquipmentListWindow();
             main.Show();
             this.Close();
         }

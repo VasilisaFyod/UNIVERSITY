@@ -6,6 +6,14 @@ namespace UNIVERSITY.Models;
 
 public partial class UniversityContext : DbContext
 {
+    private static UniversityContext _context;
+    public static UniversityContext GetContext()
+    {
+        if (_context == null)
+            _context = new UniversityContext();
+
+        return _context;
+    }
     public UniversityContext()
     {
     }
