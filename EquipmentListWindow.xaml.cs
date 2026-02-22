@@ -207,6 +207,7 @@ namespace UNIVERSITY
             {
                 LoadEquipments();
             }
+            window.ShowDialog();
         }
 
         private void ViewEditEquipment(object sender, SelectionChangedEventArgs e)
@@ -232,11 +233,12 @@ namespace UNIVERSITY
             {
                 AddUpdateEquipmentWindow window = new AddUpdateEquipmentWindow(equipment);
 
+
                 if (window.ShowDialog() == true)
                 {
                     LoadEquipments();
                 }
-
+                window.ShowDialog();
             }
         }
 

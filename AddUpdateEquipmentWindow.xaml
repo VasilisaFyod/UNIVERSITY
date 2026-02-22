@@ -21,7 +21,7 @@
                      Value="True">
                     <Setter Property="IsReadOnly" Value="True"/>
                 </DataTrigger>
-            </Style.Triggers>
+                </Style.Triggers>
         </Style>
         <Style TargetType="ComboBox">
             <Style.Triggers>

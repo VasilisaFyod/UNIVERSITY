@@ -28,7 +28,7 @@ namespace UNIVERSITY
         public int? SelectedAuditoriumId { get; set; }
         public bool IsEditModeInvNumber => _equipment.EquipmentId != 0;
         public bool IsEditModeDate => _equipment.EquipmentId == 0;
-
+  
 
         public AddUpdateEquipmentWindow(Equipment equipment = null)
         {
@@ -74,6 +74,8 @@ namespace UNIVERSITY
             DataContext = _equipment;
             IsReadOnlyMode = !(_user.Position.PositionName.Contains("администратор") ||
                    _user.Position.PositionName.Contains("заведующий"));
+
+            SetControlsReadOnly(IsReadOnlyMode);
         }
 
         private void NumericTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -86,6 +88,35 @@ namespace UNIVERSITY
                     return;
                 }
             }
+        }
+        private void SetControlsReadOnly(bool isReadOnly)
+        {
+            void SetReadOnlyRecursive(UIElement element)
+            {
+                if (element is TextBox tb)
+                    tb.IsReadOnly = isReadOnly;
+
+                else if (element is ComboBox cb)
+                    cb.IsEnabled = !isReadOnly;
+
+                else if (element is DatePicker dp)
+                    dp.IsEnabled = !isReadOnly;
+
+                else if (element is Button btn && (btn.Name == "SaveButton" || btn.Name == "ImageButton"))
+                    btn.IsEnabled = !isReadOnly;
+
+                else if (element is Panel panel)
+                {
+                    foreach (UIElement child in panel.Children)
+                        SetReadOnlyRecursive(child);
+                }
+                else if (element is ContentControl cc && cc.Content is UIElement content)
+                {
+                    SetReadOnlyRecursive(content);
+                }
+            }
+
+            SetReadOnlyRecursive(MainGrid);
         }
 
         private void OfficeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -140,7 +171,6 @@ namespace UNIVERSITY
             _context.SaveChanges();
 
             MessageBox.Show("Данные сохранены", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-            DialogResult = true;    
             this.Close();
         }
 
@@ -235,9 +265,9 @@ namespace UNIVERSITY
             DateTime endOfLife = balanceDate.AddYears(_equipment.ServiceLife);
 
             bool isOnSklad = (_equipment.Office != null &&
-                             _equipment.Office.NameOffice.ToLower().Trim().Equals("склад"))
-                             || (_equipment.Auditorium != null && _equipment.Auditorium.Office.NameOffice.ToLower().Trim().Equals("склад"));
-
+                            _equipment.Office.NameOffice.ToLower().Trim().Equals("склад"))
+                            ||
+                    (_equipment.Auditorium != null && _equipment.Auditorium.Office.NameOffice.ToLower().Trim().Equals("склад"));
             if (!isOnSklad)
             {
                 MessageBox.Show("Удалять можно только оборудование со склада", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
