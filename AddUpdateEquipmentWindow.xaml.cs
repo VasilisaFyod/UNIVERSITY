@@ -171,6 +171,7 @@ namespace UNIVERSITY
             _context.SaveChanges();
 
             MessageBox.Show("Данные сохранены", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
             this.Close();
         }
 
