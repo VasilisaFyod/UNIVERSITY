@@ -52,7 +52,16 @@ public partial class Equipment
             if (!File.Exists(path))
                 return null;
 
-            return new BitmapImage(new Uri(path, UriKind.Absolute));
+            BitmapImage image = new BitmapImage();
+            using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = stream;
+                image.EndInit();
+                image.Freeze();
+            }
+            return image;
         }
     }
     [NotMapped]

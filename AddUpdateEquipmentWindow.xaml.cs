@@ -177,6 +177,7 @@ namespace UNIVERSITY
 
         private void BackButton(object sender, RoutedEventArgs e)
         {
+            DialogResult = true;
             this.Close();
         }
         private bool ValidateForm()
@@ -226,7 +227,16 @@ namespace UNIVERSITY
 
             string selectedFilePath = dialog.FileName;
 
-            BitmapImage bitmap = new BitmapImage(new Uri(selectedFilePath));
+            BitmapImage bitmap = new BitmapImage();
+            using (FileStream stream = new FileStream(selectedFilePath, FileMode.Open, FileAccess.Read))
+            {
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                bitmap.Freeze();
+            }
+
             if (bitmap.PixelWidth > 300 || bitmap.PixelHeight > 200)
             {
                 MessageBox.Show("Максимальный размер изображения: 300x200", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -247,7 +257,10 @@ namespace UNIVERSITY
                 string oldPhotoPath = Path.Combine(imagesFolder, _equipment.Photo);
                 if (File.Exists(oldPhotoPath))
                 {
-                    try { File.Delete(oldPhotoPath); } catch { }
+                    try { File.Delete(oldPhotoPath); } 
+                    catch(Exception ex) { 
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
             }
 
@@ -255,6 +268,7 @@ namespace UNIVERSITY
 
             DataContext = null;
             DataContext = _equipment;
+
         }
 
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
@@ -266,9 +280,9 @@ namespace UNIVERSITY
             DateTime endOfLife = balanceDate.AddYears(_equipment.ServiceLife);
 
             bool isOnSklad = (_equipment.Office != null &&
-                            _equipment.Office.NameOffice.ToLower().Trim().Equals("склад"))
+                            _equipment.Office.NameOffice.ToLower().Trim().Contains("склад"))
                             ||
-                    (_equipment.Auditorium != null && _equipment.Auditorium.Office.NameOffice.ToLower().Trim().Equals("склад"));
+                    (_equipment.Auditorium != null && _equipment.Auditorium.Office != null && _equipment.Auditorium.Office.NameOffice.ToLower().Trim().Contains("склад"));
             if (!isOnSklad)
             {
                 MessageBox.Show("Удалять можно только оборудование со склада", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
