@@ -12,13 +12,37 @@ namespace UNIVERSITY
     /// </summary>
     public partial class LoginWindow : Window
     {
-        private UniversityContext _context = new UniversityContext();
+        private UniversityContext _context;
+
         public LoginWindow()
         {
             InitializeComponent();
+
+            try
+            {
+                _context = new UniversityContext();
+
+                if (!_context.Database.CanConnect())
+                    throw new Exception("База данных недоступна");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Не удалось подключиться к базе данных.\n" + 
+                    ex.Message,
+                    "Ошибка подключения",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+
+                _context = null; 
+                LoginButton.IsEnabled = false; 
+                GuestButton.IsEnabled = false;  
+            }
         }
 
-        private void LoginButton(object sender, RoutedEventArgs e)
+
+        private void LoginButtonClick(object sender, RoutedEventArgs e)
         {
             string login = LoginTextBox.Text.Trim();
             string password = PasswordTextBox.Password.Trim();
@@ -40,7 +64,7 @@ namespace UNIVERSITY
             }
         }
 
-        private void GuestButton(object sender, RoutedEventArgs e)
+        private void GuestButtonClick(object sender, RoutedEventArgs e)
         {
             App.Login(null);
             EquipmentListWindow main = new EquipmentListWindow();

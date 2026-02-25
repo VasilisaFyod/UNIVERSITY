@@ -13,8 +13,8 @@
             <TextBox x:Name="LoginTextBox" Margin="10"></TextBox>
             <TextBlock Margin="10">Пароль</TextBlock>
             <PasswordBox x:Name="PasswordTextBox" Margin="10"></PasswordBox>
-            <Button Width="100" Margin="10" Click="LoginButton">Войти</Button>
-            <Button Width="100" Margin="10" Click="GuestButton">Войти как гость</Button>
+            <Button x:Name="LoginButton" Width="100" Margin="10" Click="LoginButtonClick">Войти</Button>
+            <Button x:Name="GuestButton"  Width="100" Margin="10" Click="GuestButtonClick">Войти как гость</Button>
             <TextBlock x:Name="ErrorTextBlock" HorizontalAlignment="Center"></TextBlock>
         </StackPanel>
         

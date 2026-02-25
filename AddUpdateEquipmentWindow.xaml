@@ -44,6 +44,10 @@
         </StackPanel>
         <StackPanel Grid.Row="1" HorizontalAlignment="Center">
             <TextBlock HorizontalAlignment="Left" FontStyle="Italic">Обязательные поля *</TextBlock>
+            <TextBlock HorizontalAlignment="Left" FontStyle="Italic">Выберите подразделение или аудиторию:</TextBlock>
+            <TextBlock HorizontalAlignment="Left" FontStyle="Italic" TextWrapping="Wrap">1) Чтобы привязать к подразделению, выберите в списке аудиторий "Без аудитории".</TextBlock>
+            <TextBlock HorizontalAlignment="Left" FontStyle="Italic" TextWrapping="Wrap">2) Чтобы привязать к аудитории, выберите нужную аудиторию — подразделение заполнится автоматически.</TextBlock>
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -55,7 +59,7 @@
                     <TextBlock>* Инвентарный номер:</TextBlock>
                     <TextBlock>Описание товара:</TextBlock>
                     <TextBlock>Подразделение:</TextBlock>
-                    <TextBlock>Кабинет:</TextBlock>
+                    <TextBlock>Аудитория:</TextBlock>
                     <TextBlock>* Вес:</TextBlock>
                     <TextBlock>* Нормативный срок службы:</TextBlock>
                     <TextBlock>* Дата постановки на баланс компании:</TextBlock>

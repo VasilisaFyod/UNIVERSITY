@@ -207,7 +207,6 @@ namespace UNIVERSITY
             {
                 LoadEquipments();
             }
-            window.ShowDialog();
         }
 
         private void ViewEditEquipment(object sender, SelectionChangedEventArgs e)
@@ -238,8 +237,9 @@ namespace UNIVERSITY
                 {
                     LoadEquipments();
                 }
-                window.ShowDialog();
+                ListEquipments.SelectedItem = null;
             }
+
         }
 
         private void OfficeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
